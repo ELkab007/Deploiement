@@ -16,7 +16,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Récupérer le code source du dépôt Git
-                checkout scm
+                checkout scm https://github.com/ELkab007/Deploiement.git
             }
         }
 
@@ -65,7 +65,7 @@ pipeline {
                     -e wordpress=${WORDPRESS_VOLUME} -e mysql_root_password=${MYSQL_ROOT_PASSWORD} \
                     -e mysql_username=${MYSQL_USER} -e mysql_password=${MYSQL_PASSWORD} \
                     -e mysql_database=${MYSQL_DATABASE} -e container_port=${CONTAINER_PORT} \
-                    deploy_wordpress.yml
+                    wordpress.yml
                     '''
                 }
             }
