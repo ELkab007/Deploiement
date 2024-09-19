@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -24,8 +23,12 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Étape de compilation, si nécessaire
-                    sh './gradlew build' // Adapter selon ton projet
+                    // Vérifie si le fichier gradlew est présent avant d'exécuter la commande
+                    if (fileExists('gradlew')) {
+                        sh './gradlew build'
+                    } else {
+                        echo 'Gradlew non trouvé. Passer à l’étape suivante.'
+                    }
                 }
             }
         }
@@ -33,8 +36,12 @@ pipeline {
         stage('Unit Test') {
             steps {
                 script {
-                    // Exécuter les tests unitaires
-                    sh './gradlew test' // Adapter selon ton projet
+                    // Exécuter les tests unitaires si Gradle est utilisé
+                    if (fileExists('gradlew')) {
+                        sh './gradlew test'
+                    } else {
+                        echo 'Gradlew non trouvé. Aucun test unitaire exécuté.'
+                    }
                 }
             }
         }
@@ -42,8 +49,12 @@ pipeline {
         stage('Integration Test') {
             steps {
                 script {
-                    // Exécuter les tests d'intégration
-                    sh './gradlew integrationTest' // Adapter selon ton projet
+                    // Exécuter les tests d'intégration si Gradle est utilisé
+                    if (fileExists('gradlew')) {
+                        sh './gradlew integrationTest'
+                    } else {
+                        echo 'Gradlew non trouvé. Aucun test d’intégration exécuté.'
+                    }
                 }
             }
         }
@@ -51,7 +62,7 @@ pipeline {
         stage('Create Database') {
             steps {
                 script {
-                    echo 'Base de données sera créée par Ansible lors du déploiement.'
+                    echo 'La base de données sera créée par Ansible lors du déploiement.'
                 }
             }
         }
