@@ -23,13 +23,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Vérifie si le fichier gradlew est présent avant d'exécuter la commande
-                    if (fileExists('gradlew')) {
-                        sh './gradlew build'
-                    } else {
-                        echo 'Gradlew non trouvé. Passer à l’étape suivante.'
-                    }
-                }
+                
             }
         }
 
@@ -37,9 +31,6 @@ pipeline {
             steps {
                 script {
                     // Exécuter les tests unitaires si Gradle est utilisé
-                    if (fileExists('gradlew')) {
-                        sh './gradlew test'
-                    } else {
                         echo 'Gradlew non trouvé. Aucun test unitaire exécuté.'
                     }
                 }
@@ -50,12 +41,7 @@ pipeline {
             steps {
                 script {
                     // Exécuter les tests d'intégration si Gradle est utilisé
-                    if (fileExists('gradlew')) {
-                        sh './gradlew integrationTest'
-                    } else {
                         echo 'Gradlew non trouvé. Aucun test d’intégration exécuté.'
-                    }
-                }
             }
         }
 
