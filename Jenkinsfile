@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -16,7 +17,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Récupérer le code source du dépôt Git
-                checkout scm https://github.com/ELkab007/Deploiement.git
+                git url: 'https://github.com/ELkab007/Deploiement.git', branch: 'main'
             }
         }
 
@@ -33,7 +34,7 @@ pipeline {
             steps {
                 script {
                     // Exécuter les tests unitaires
-                    sh './gradlew test' // Ou autres tests unitaires
+                    sh './gradlew test' // Adapter selon ton projet
                 }
             }
         }
@@ -42,7 +43,7 @@ pipeline {
             steps {
                 script {
                     // Exécuter les tests d'intégration
-                    sh './gradlew integrationTest' // Ou autre command pour les tests d'intégration
+                    sh './gradlew integrationTest' // Adapter selon ton projet
                 }
             }
         }
@@ -50,7 +51,6 @@ pipeline {
         stage('Create Database') {
             steps {
                 script {
-                    // Optionnel, si la base de données n'est pas déjà déployée par Ansible
                     echo 'Base de données sera créée par Ansible lors du déploiement.'
                 }
             }
@@ -74,7 +74,6 @@ pipeline {
 
     post {
         always {
-            // Nettoyage à la fin du pipeline
             script {
                 echo 'Pipeline terminé, nettoyage si nécessaire.'
             }
