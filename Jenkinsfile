@@ -9,7 +9,7 @@ pipeline {
         MYSQL_PASSWORD = 'secretpassword'
         MYSQL_DATABASE = 'wordpressdb'
         CONTAINER_PORT = 8082
-        NODES = 'my-server' // Modifier selon le nom des hôtes cibles
+        NODES = '192.168.122.128' // Modifier selon le nom des hôtes cibles
     }
 
     stages {
