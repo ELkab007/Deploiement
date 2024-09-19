@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -23,7 +24,9 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                
+                    // Ici tu peux ajouter ta logique de build
+                    echo 'Build étape exécutée.'
+                }
             }
         }
 
@@ -31,8 +34,7 @@ pipeline {
             steps {
                 script {
                     // Exécuter les tests unitaires si Gradle est utilisé
-                        echo 'Gradlew non trouvé. Aucun test unitaire exécuté.'
-                    }
+                    echo 'Gradlew non trouvé. Aucun test unitaire exécuté.'
                 }
             }
         }
@@ -41,7 +43,8 @@ pipeline {
             steps {
                 script {
                     // Exécuter les tests d'intégration si Gradle est utilisé
-                        echo 'Gradlew non trouvé. Aucun test d’intégration exécuté.'
+                    echo 'Gradlew non trouvé. Aucun test d’intégration exécuté.'
+                }
             }
         }
 
