@@ -2,14 +2,14 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage ('Checkout') {
             steps {
                 // Retrieve the source code from the Git repository
                 git url: 'https://github.com/ELkab007/Deploiement.git', branch: 'main'
             }
         }
 
-        stage('Build') {
+        stage ('Build') {
             steps {
                 script {
                     // Add your build logic here
@@ -19,7 +19,7 @@ pipeline {
             }
         }
 
-        stage('Unit Test') {
+        stage ('Unit Test') {
             steps {
                 script {
                     // Execute unit tests if Gradle is used
@@ -29,7 +29,7 @@ pipeline {
             }
         }
 
-        stage('Integration Test') {
+        stage ('Integration Test') {
             steps {
                 script {
                     // Execute integration tests if Gradle is used
@@ -39,7 +39,7 @@ pipeline {
             }
         }
 
-        stage('Create Database') {
+        stage ('Create Database') {
             steps {
                 script {
                     echo 'The database will be created by Ansible during deployment.'
@@ -48,7 +48,7 @@ pipeline {
             }
         }
 
-        stage('Deploy') { // Ajout de la nouvelle étape de déploiement
+        stage ('Deploy') { // Ajout de la nouvelle étape de déploiement
             steps {
                 script {
                     // Exécutez la commande ansible-playbook
