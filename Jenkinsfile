@@ -47,5 +47,14 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy') { // Ajout de la nouvelle étape de déploiement
+            steps {
+                script {
+                    // Exécutez la commande ansible-playbook
+                    sh 'ansible-playbook wordpress.yaml --become --ask-become-pass -e "NODES=server"'
+                }
+            }
+        }
     }
 }
