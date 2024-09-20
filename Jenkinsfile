@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     stages {
-        stage(('Checkout') {
-           steps {
+        stage('Checkout') {
+            steps {
                 // Retrieve the source code from the Git repository
                 git url: 'https://github.com/ELkab007/Deploiement.git', branch: 'main'
             }
