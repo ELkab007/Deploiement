@@ -52,7 +52,7 @@ pipeline {
             steps {
                 script {
                     // Exécutez la commande ansible-playbook
-                    sh 'ansible-playbook wordpress.yaml -e "NODES=node1" '
+                    sh 'ansible-playbook wordpress.yaml -e "NODES=localhost" '
                 }
             }
         }
