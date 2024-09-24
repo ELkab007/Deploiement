@@ -52,7 +52,7 @@ pipeline {
             steps {
                 script {
                     // Exécutez la commande ansible-playbook
-                    sh 'ansible-playbook wordpress.yaml --become --ask-become-pass -e "NODES=server" '
+                    sh 'ansible-playbook wordpress.yaml --become --ask-become-pass --ask-pass -e "NODES=server" '
                 }
             }
         }
