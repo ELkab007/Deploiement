@@ -14,7 +14,7 @@ pipeline {
                 script {
                     // Add your build logic here
     credentialsId:
-    '065dd48d-93d4-431d-9ce5-d3c53917adf7', inventory:
+    'id_rsa', inventory:
     'hosts', playbook:
     'wordpress.yaml'
                     // Example: sh './gradlew build' // Uncomment if using Gradle
