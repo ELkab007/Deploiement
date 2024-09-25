@@ -1,2 +1,2 @@
 [node1]
-server ansible_host=192.168.122.128 ansible_user=/home/elkab/.ssh/id_rsa
+server ansible_host=192.168.122.128 ansible_user=elias
