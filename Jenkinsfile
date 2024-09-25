@@ -9,11 +9,13 @@ pipeline {
             }
         }
 
-        stage ('Run Ansible') {
+        stage ('Build') {
             steps {
                 script {
                     // Add your build logic here
-         }
+                    echo 'Build stage executed.'
+                    // Example: sh './gradlew build' // Uncomment if using Gradle
+                }
             }
         }
 
@@ -50,11 +52,9 @@ pipeline {
             steps {
                 script {
                     // Exécutez la commande ansible-playbook
-                    sh 'ansible-playbook wordpress.yaml -e "NODES=server" '
+                    sh 'ansible-playbook wordpress.yaml --become --ask-become-pass -e "NODES=server" '
                 }
             }
         }
     }
 }
-
-         // Example: sh './gradlew build' // Uncomment if using Gradle
