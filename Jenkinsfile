@@ -26,7 +26,7 @@ pipeline {
             }
         }
         
-        stage('Install Ansible') {
+        stage('deploye') {
             steps {
                 script {
                     // Installer Ansible s'il n'est pas déjà installé
