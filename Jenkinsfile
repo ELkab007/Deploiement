@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage ('Checkout') {
             steps {
-                // Retrieve the source code from the Git repository
+                // Récupère le code source du dépôt Git
                 git url: 'https://github.com/ELkab007/Deploiement.git', branch: 'main'
             }
         }
@@ -12,9 +12,9 @@ pipeline {
         stage ('Build') {
             steps {
                 script {
-                    // Add your build logic here
+                    // Logique de build ici si nécessaire
                     echo 'Build stage executed.'
-                    // Example: sh './gradlew build' // Uncomment if using Gradle
+                    // Exemple : sh './gradlew build' // Décommentez si Gradle est utilisé
                 }
             }
         }
@@ -22,9 +22,9 @@ pipeline {
         stage ('Unit Test') {
             steps {
                 script {
-                    // Execute unit tests if Gradle is used
+                    // Exécuter les tests unitaires si Gradle est utilisé
                     echo 'Gradlew not found. No unit tests executed.'
-                    // Example: sh './gradlew test' // Uncomment if using Gradle
+                    // Exemple : sh './gradlew test' // Décommentez si Gradle est utilisé
                 }
             }
         }
@@ -32,9 +32,40 @@ pipeline {
         stage ('Integration Test') {
             steps {
                 script {
-                    // Execute integration tests if Gradle is used
+                    // Exécuter les tests d'intégration si Gradle est utilisé
                     echo 'Gradlew not found. No integration tests executed.'
-                    // Example: sh './gradlew integrationTest' // Uncomment if using Gradle
+                    // Exemple : sh './gradlew integrationTest' // Décommentez si Gradle est utilisé
+                }
+            }
+        }
+
+        stage ('Create Docker Environment') {
+            steps {
+                script {
+                    // S'assurer que Docker est installé et configuré correctement
+                    echo 'Setting up Docker environment...'
+                    sh '''
+                        if ! docker --version; then
+                            echo "Docker is not installed. Installing Docker..."
+                            sudo apt-get update
+                            sudo apt-get install -y docker.io
+                            sudo systemctl start docker
+                            sudo systemctl enable docker
+                        fi
+                    '''
+                }
+            }
+        }
+
+        stage ('Pull Docker Images') {
+            steps {
+                script {
+                    // Télécharger les images nécessaires pour WordPress et MariaDB
+                    echo 'Pulling Docker images for WordPress and MariaDB...'
+                    sh '''
+                        docker pull wordpress:latest
+                        docker pull mariadb:latest
+                    '''
                 }
             }
         }
@@ -42,19 +73,44 @@ pipeline {
         stage ('Create Database') {
             steps {
                 script {
+                    // Déclencher la création de la base de données via Ansible
                     echo 'The database will be created by Ansible during deployment.'
-                    // Example: sh 'ansible-playbook create_db.yml' // Uncomment if using Ansible
+                    // Exemple : sh 'ansible-playbook create_db.yml' // Décommentez si vous avez un playbook Ansible
                 }
             }
         }
 
-        stage ('Deploy') { // Ajout de la nouvelle étape de déploiement
+        stage ('Deploy WordPress with Ansible and Docker') {
             steps {
                 script {
-                    // Exécutez la commande ansible-playbook
-                    sh 'ansible-playbook wordpress.yaml --become --ask-become-pass -e "NODES=server" '
+                    // Exécuter le playbook Ansible pour déployer WordPress via Docker
+                    echo 'Deploying WordPress using Ansible and Docker...'
+                    sh '''
+                        ansible-playbook wordpress.yaml --become --ask-become-pass -e "NODES=server" -e "docker=true"
+                    '''
                 }
             }
+        }
+        
+        stage ('Post-Deployment Check') {
+            steps {
+                script {
+                    // Vérifier que le conteneur WordPress fonctionne correctement
+                    echo 'Checking if WordPress is running...'
+                    sh '''
+                        docker ps | grep wordpress || echo "WordPress container is not running!"
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline executed successfully. WordPress has been deployed.'
+        }
+        failure {
+            echo 'Pipeline failed. Please check the logs for details.'
         }
     }
 }
