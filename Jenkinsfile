@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        ANSIBLE_PLAYBOOK = "deploy_wordpress.yml"  // Nom du playbook Ansible
+        ANSIBLE_PLAYBOOK = "wordpress.yml"  // Nom du playbook Ansible
         INVENTORY = "hosts.ini"                    // Fichier d'inventaire Ansible
         NODES = "docker_hosts"                     // Groupe d'hôtes ou variables Jenkins
     }
@@ -21,7 +21,7 @@ pipeline {
             steps {
                 script {
                     // Installer Ansible s'il n'est pas déjà installé
-                    sh 'sudo apt update && sudo apt install -y ansible'
+                    sh 'apt update && sudo apt install -y ansible'
                 }
             }
         }
