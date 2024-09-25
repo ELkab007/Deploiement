@@ -1,116 +1,64 @@
 pipeline {
     agent any
 
+    environment {
+        ANSIBLE_PLAYBOOK = "deploy_wordpress.yml"  // Nom du playbook Ansible
+        INVENTORY = "hosts.ini"                    // Fichier d'inventaire Ansible
+        NODES = "docker_hosts"                     // Groupe d'hôtes ou variables Jenkins
+    }
+
     stages {
-        stage ('Checkout') {
-            steps {
-                // Récupère le code source du dépôt Git
-                git url: 'https://github.com/ELkab007/Deploiement.git', branch: 'main'
-            }
-        }
-
-        stage ('Build') {
+        stage('Checkout') {
             steps {
                 script {
-                    // Logique de build ici si nécessaire
-                    echo 'Build stage executed.'
-                    // Exemple : sh './gradlew build' // Décommentez si Gradle est utilisé
+                    // Vérifier le dépôt contenant le playbook Ansible
+                    checkout scm
                 }
             }
         }
 
-        stage ('Unit Test') {
+        stage('Install Ansible') {
             steps {
                 script {
-                    // Exécuter les tests unitaires si Gradle est utilisé
-                    echo 'Gradlew not found. No unit tests executed.'
-                    // Exemple : sh './gradlew test' // Décommentez si Gradle est utilisé
+                    // Installer Ansible s'il n'est pas déjà installé
+                    sh 'sudo apt update && sudo apt install -y ansible'
                 }
             }
         }
 
-        stage ('Integration Test') {
+        stage('Run Playbook') {
             steps {
                 script {
-                    // Exécuter les tests d'intégration si Gradle est utilisé
-                    echo 'Gradlew not found. No integration tests executed.'
-                    // Exemple : sh './gradlew integrationTest' // Décommentez si Gradle est utilisé
-                }
-            }
-        }
-
-        stage ('Create Docker Environment') {
-            steps {
-                script {
-                    // S'assurer que Docker est installé et configuré correctement
-                    echo 'Setting up Docker environment...'
-                    sh '''
-                        if ! docker --version; then
-                            echo "Docker is not installed. Installing Docker..."
-                            sudo apt-get update
-                            sudo apt-get install -y docker.io
-                            sudo systemctl start docker
-                            sudo systemctl enable docker
-                        fi
-                    '''
-                }
-            }
-        }
-
-        stage ('Pull Docker Images') {
-            steps {
-                script {
-                    // Télécharger les images nécessaires pour WordPress et MariaDB
-                    echo 'Pulling Docker images for WordPress and MariaDB...'
-                    sh '''
-                        docker pull wordpress:latest
-                        docker pull mariadb:latest
-                    '''
-                }
-            }
-        }
-
-        stage ('Create Database') {
-            steps {
-                script {
-                    // Déclencher la création de la base de données via Ansible
-                    echo 'The database will be created by Ansible during deployment.'
-                    // Exemple : sh 'ansible-playbook create_db.yml' // Décommentez si vous avez un playbook Ansible
-                }
-            }
-        }
-
-        stage ('Deploy WordPress with Ansible and Docker') {
-            steps {
-                script {
-                    // Exécuter le playbook Ansible pour déployer WordPress via Docker
-                    echo 'Deploying WordPress using Ansible and Docker...'
-                    sh '''
-                        ansible-playbook wordpress.yaml --become --ask-become-pass -e "NODES=server" -e "docker=true"
-                    '''
-                }
-            }
-        }
-        
-        stage ('Post-Deployment Check') {
-            steps {
-                script {
-                    // Vérifier que le conteneur WordPress fonctionne correctement
-                    echo 'Checking if WordPress is running...'
-                    sh '''
-                        docker ps | grep wordpress || echo "WordPress container is not running!"
-                    '''
+                    // Exécuter le playbook Ansible pour déployer la stack WordPress et MariaDB
+                    sh """
+                    ansible-playbook ${ANSIBLE_PLAYBOOK} \
+                    -i ${INVENTORY} \
+                    -e NODES=${NODES} \
+                    -e db_volume=mariadb \
+                    -e wordpress=wordpress \
+                    -e mysql_root_password=secretrootpassword \
+                    -e mysql_username=wordpressuser \
+                    -e mysql_password=secretpassword \
+                    -e mysql_database=wordpressdb \
+                    -e container_port=8082
+                    """
                 }
             }
         }
     }
 
     post {
-        success {
-            echo 'Pipeline executed successfully. WordPress has been deployed.'
+        always {
+            // Archive les logs ou résultats de déploiement
+            archiveArtifacts artifacts: '**/playbook.log', allowEmptyArchive: true
         }
+
+        success {
+            echo 'Playbook executed successfully.'
+        }
+
         failure {
-            echo 'Pipeline failed. Please check the logs for details.'
+            echo 'Playbook failed.'
         }
     }
 }
