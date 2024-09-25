@@ -30,7 +30,7 @@ pipeline {
             steps {
                 script {
                     // Installer Ansible s'il n'est pas déjà installé
-                    sh 'ansible-playbook wordpress.yaml -e NODES=server'
+                    sh 'ansible-playbook wordpress.yaml -e ask-pass NODES=server'
                 }
             }
         }
