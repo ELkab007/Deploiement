@@ -14,7 +14,7 @@ pipeline {
                 script {
                     // Add your build logic here
     credentialsId:
-    'ssh-key', inventory:
+    '065dd48d-93d4-431d-9ce5-d3c53917adf7', inventory:
     'hosts', playbook:
     'wordpress.yaml'
                     // Example: sh './gradlew build' // Uncomment if using Gradle
