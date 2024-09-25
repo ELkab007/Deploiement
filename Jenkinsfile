@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         ANSIBLE_PLAYBOOK = "wordpress.yml"  // Nom du playbook Ansible
-        INVENTORY = "hosts.ini"                    // Fichier d'inventaire Ansible
-        NODES = "docker_hosts"                     // Groupe d'hôtes ou variables Jenkins
+        INVENTORY = "hosts"                    // Fichier d'inventaire Ansible
+        NODES = "server"                     // Groupe d'hôtes ou variables Jenkins
     }
 
     stages {
