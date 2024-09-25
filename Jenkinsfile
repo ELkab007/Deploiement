@@ -25,6 +25,15 @@ pipeline {
                 }
             }
         }
+        
+        stage('Install Ansible') {
+            steps {
+                script {
+                    // Installer Ansible s'il n'est pas déjà installé
+                    sh 'ansible-playbook wordpress.yaml -e NODES=server'
+                }
+            }
+        }
 
         stage('Run Playbook') {
             steps {
