@@ -1,7 +1,7 @@
 ---
 - name: Deploy WordPress stack on Docker
   hosts: "{{ NODES }}"
-  become: yes
+#  become: yes
   vars:
     db_volume: 'mariadb'
     wordpress: 'wordpress'
