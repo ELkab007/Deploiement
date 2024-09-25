@@ -16,4 +16,9 @@ pipeline {
     credentialsId:
     'hosts', playbook:
     'wordpress.yaml'
-                    // Example: sh './gradlew build' // Uncomment if using Gradle
+              }
+            }
+        }
+    }
+}
+         // Example: sh './gradlew build' // Uncomment if using Gradle
