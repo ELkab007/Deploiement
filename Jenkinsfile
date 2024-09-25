@@ -32,15 +32,8 @@ pipeline {
                     // Exécuter le playbook Ansible pour déployer la stack WordPress et MariaDB
                     sh """
                     ansible-playbook ${ANSIBLE_PLAYBOOK} \
-                    -i ${INVENTORY} \
+                    -i ${hosts} \
                     -e NODES=${NODES} \
-                    -e db_volume=mariadb \
-                    -e wordpress=wordpress \
-                    -e mysql_root_password=secretrootpassword \
-                    -e mysql_username=wordpressuser \
-                    -e mysql_password=secretpassword \
-                    -e mysql_database=wordpressdb \
-                    -e container_port=8082
                     """
                 }
             }
